@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  PORTADA DE REPORTES · Retail Compass
+  ------------------------------------------------------------
+  PARA AGREGAR UN REPORTE NUEVO:
+    1. Sube tu archivo .html a este mismo repositorio.
+    2. Abajo, en la lista REPORTES (dentro de <script>), agrega
+       un bloque nuevo copiando uno existente y cambiando los datos.
+    3. Guarda. Listo: aparecerá automáticamente en la portada.
+
+  Cada reporte se define así:
+    {
+      titulo:      "Nombre visible del reporte",
+      archivo:     "nombre-del-archivo.html",   // tal cual lo subiste
+      descripcion: "Una línea explicando de qué trata",
+      fecha:       "2026-06-01",                // formato AAAA-MM-DD
+      etiqueta:    "Ventas"                     // categoría libre, opcional
+    }
+
+  NOTA: el logo se referencia como assets/logo-rc.png (ruta relativa).
+  Sube esa carpeta junto al index para que el logo se vea.
+  ============================================================
+-->
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reportes · Retail Compass</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ---- Tokens (RC Design System v2.0) ---- */
+  :root{
+    --c-page:#F4F5F7; --c-surface:#FFFFFF; --c-section:#FAFAFA;
+    --c-border:#E6E7EB; --c-border-soft:#F0F1F4;
+    --c-ink:#1A1B25; --c-text:#33343B; --c-muted:#6A6C78; --c-faint:#9A9CA8;
+    --c-primary:#4146DE; --c-primary-hover:#6C70E5; --c-primary-tint:#EDEDFB;
+    --shadow-sm:0 1px 2px rgba(26,27,37,.06), 0 1px 3px rgba(26,27,37,.04);
+    --shadow-hover:0 10px 28px rgba(26,27,37,.10);
+    --radius:12px; --radius-sm:8px; --radius-pill:999px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    background:var(--c-page);
+    color:var(--c-text);
+    font-family:'Roboto',system-ui,-apple-system,'Segoe UI',sans-serif;
+    min-height:100vh;
+    padding:clamp(1.5rem,5vw,4.5rem);
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono{font-family:'Roboto Mono',ui-monospace,monospace;}
+  .wrap{max-width:1080px;margin:0 auto;}
+
+  /* ---- Header ---- */
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:1.2rem;
+    padding-bottom:1.6rem;
+    border-bottom:1px solid var(--c-border);
+  }
+  .brandline{display:flex;align-items:center;gap:14px;margin-bottom:1.4rem;}
+  .brandline img{height:24px;width:auto;display:block;}
+  .brandline .div{width:1px;height:20px;background:var(--c-border);}
+  .brandline .eyebrow{
+    font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--c-primary);font-weight:700;
+  }
+  h1{
+    font-size:clamp(2rem,5vw,2.9rem);
+    font-weight:700;
+    letter-spacing:-.025em;
+    color:var(--c-ink);
+    line-height:1;
+  }
+  .subtitle{font-size:.95rem;color:var(--c-muted);margin-top:.7rem;}
+  .meta{text-align:right;font-size:.8rem;color:var(--c-muted);line-height:1.9;}
+  .meta b{color:var(--c-ink);font-weight:500;}
+  .meta .mono{font-size:.78rem;}
+
+  /* ---- Toolbar ---- */
+  .toolbar{display:flex;gap:1rem;align-items:center;margin:1.8rem 0 1.8rem;flex-wrap:wrap;}
+  .search{position:relative;flex:1;min-width:240px;}
+  .search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--c-faint);pointer-events:none;}
+  #buscar{
+    width:100%;
+    background:var(--c-surface);
+    border:1px solid var(--c-border);
+    border-radius:var(--radius-sm);
+    padding:.8rem 1rem .8rem 2.6rem;
+    font-family:inherit;font-size:.92rem;color:var(--c-text);
+    transition:border-color .18s,box-shadow .18s;
+  }
+  #buscar:focus{outline:none;border-color:var(--c-primary);box-shadow:0 0 0 3px rgba(65,70,222,.16);}
+  #buscar::placeholder{color:var(--c-faint);}
+  .count{font-size:.8rem;color:var(--c-muted);white-space:nowrap;}
+
+  /* ---- Grid + cards ---- */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:1.1rem;}
+  a.card{
+    display:flex;flex-direction:column;
+    text-decoration:none;color:inherit;
+    background:var(--c-surface);
+    border:1px solid var(--c-border);
+    border-radius:var(--radius);
+    padding:1.5rem 1.5rem 1.3rem;
+    position:relative;overflow:hidden;
+    box-shadow:var(--shadow-sm);
+    transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease;
+  }
+  a.card::before{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+    background:var(--c-primary);
+    transform:scaleY(0);transform-origin:top;
+    transition:transform .22s ease;
+  }
+  a.card:hover{transform:translateY(-3px);box-shadow:var(--shadow-hover);border-color:#D4D6DD;}
+  a.card:hover::before{transform:scaleY(1);}
+  .card .etiqueta{
+    display:inline-flex;align-self:flex-start;align-items:center;gap:6px;
+    font-size:11px;letter-spacing:.04em;font-weight:500;
+    color:var(--c-primary);background:var(--c-primary-tint);
+    border-radius:var(--radius-pill);
+    padding:.28rem .7rem;margin-bottom:1.1rem;
+  }
+  .card .etiqueta .dot{width:6px;height:6px;border-radius:50%;background:var(--c-primary);flex:none;}
+  .card h2{
+    font-size:1.2rem;font-weight:500;line-height:1.2;
+    letter-spacing:-.01em;color:var(--c-ink);margin-bottom:.55rem;
+  }
+  .card p{font-size:.86rem;color:var(--c-muted);line-height:1.55;margin-bottom:1.3rem;}
+  .card .pie{
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:.76rem;color:var(--c-faint);
+    border-top:1px solid var(--c-border-soft);padding-top:.9rem;margin-top:auto;
+  }
+  .card .pie .fecha{font-family:'Roboto Mono',monospace;}
+  .card .ver{color:var(--c-primary);font-weight:500;display:inline-flex;align-items:center;gap:5px;}
+  .card .ver svg{transition:transform .18s ease;}
+  a.card:hover .ver svg{transform:translateX(3px);}
+
+  .vacio{grid-column:1/-1;text-align:center;padding:4rem 1rem;color:var(--c-muted);font-size:.92rem;}
+
+  footer{margin-top:3rem;padding-top:1.3rem;border-top:1px solid var(--c-border);font-size:.76rem;color:var(--c-faint);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="title-block">
+      <div class="brandline">
+        <img src="assets/logo-rc.png" alt="Retail Compass">
+        <span class="div"></span>
+        <span class="eyebrow">Centro de informes</span>
+      </div>
+      <h1>Reportes</h1>
+      <p class="subtitle">Inteligencia de competitividad e‑commerce por store.</p>
+    </div>
+    <div class="meta">
+      <div>Total · <b id="total">0</b> reportes</div>
+      <div>Actualizado · <b class="mono" id="hoy"></b></div>
+    </div>
+  </header>
+
+  <div class="toolbar">
+    <div class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.2-3.2"/></svg>
+      <input id="buscar" type="text" placeholder="Buscar por título, descripción o etiqueta…" autocomplete="off">
+    </div>
+    <span class="count" id="contador"></span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+
+  <footer>
+    Para agregar un reporte: sube el .html al repositorio y añade una entrada en la lista del código fuente de esta página.
+  </footer>
+</div>
+
+<script>
+  /* ===========================================================
+     LISTA DE REPORTES — edita solo esta parte.
+     Copia un bloque, pégalo y cambia los datos para sumar uno.
+     =========================================================== */
+  const REPORTES = [
+    {
+      titulo: "Falabella · Store 1142",
+      archivo: "Reporte Falabella 1142.html",
+      descripcion: "Panorama de presencia y frescura — 3 productos relevantes, 305 SKUs.",
+      fecha: "2026-06-01",
+      etiqueta: "Competitividad"
+    },
+    {
+      titulo: "Falabella · Store 4",
+      archivo: "Reporte Falabella 4.html",
+      descripcion: "Catálogo amplio (488 SKUs) con frescura crítica a revisar.",
+      fecha: "2026-06-01",
+      etiqueta: "Competitividad"
+    }
+  ];
+  /* =========================================================== */
+
+  const grid = document.getElementById('grid');
+  const buscar = document.getElementById('buscar');
+  const contador = document.getElementById('contador');
+  document.getElementById('total').textContent = REPORTES.length;
+  document.getElementById('hoy').textContent = new Date().toLocaleDateString('es-CL', {day:'2-digit', month:'short', year:'numeric'});
+
+  function fmtFecha(f){
+    if(!f) return '';
+    const d = new Date(f + 'T00:00:00');
+    if(isNaN(d)) return f;
+    return d.toLocaleDateString('es-CL', {day:'2-digit', month:'short', year:'numeric'});
+  }
+
+  const arrow = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+
+  function render(lista){
+    grid.innerHTML = '';
+    if(lista.length === 0){
+      grid.innerHTML = '<div class="vacio">No hay reportes que coincidan con tu búsqueda.</div>';
+      contador.textContent = '';
+      return;
+    }
+    // Más recientes primero
+    lista.sort((a,b) => (b.fecha||'').localeCompare(a.fecha||''));
+    lista.forEach(r => {
+      const a = document.createElement('a');
+      a.className = 'card';
+      a.href = r.archivo;
+      a.innerHTML = `
+        ${r.etiqueta ? `<span class="etiqueta"><span class="dot"></span>${r.etiqueta}</span>` : ''}
+        <h2>${r.titulo}</h2>
+        ${r.descripcion ? `<p>${r.descripcion}</p>` : ''}
+        <div class="pie">
+          <span class="fecha">${fmtFecha(r.fecha)}</span>
+          <span class="ver">Ver reporte ${arrow}</span>
+        </div>`;
+      grid.appendChild(a);
+    });
+    contador.textContent = lista.length + ' visible' + (lista.length === 1 ? '' : 's');
+  }
+
+  buscar.addEventListener('input', e => {
+    const q = e.target.value.toLowerCase().trim();
+    render(REPORTES.filter(r =>
+      (r.titulo + ' ' + (r.descripcion||'') + ' ' + (r.etiqueta||'')).toLowerCase().includes(q)
+    ));
+  });
+
+  render([...REPORTES]);
+</script>
+</body>
+</html>
